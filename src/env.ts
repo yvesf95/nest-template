@@ -1,12 +1,28 @@
+import { z } from 'zod';
+
+const envSchema = z.object({
+  /** This comes from package.json */
+  npm_package_version: z.string().default('0.0.1'),
+  APP_PORT: z.coerce.number().min(1000),
+  OPEN_API_TITLE: z.string().default('Example API'),
+  OPEN_API_DESCRIPTION: z.string().default('This is an example API'),
+  OPEN_API_PATH: z.string().default('api'),
+});
+
+const { success, data, error } = envSchema.safeParse(process.env);
+if (!success) {
+  console.error('❌ Invalid environment variables:', error.format());
+  process.exit(1);
+}
+
 export const env = {
   app: {
-    /** This comes from package.json */
-    version: process.env.npm_package_version || '0.0.1',
-    port: parseInt(process.env.APP_PORT || '3000', 10),
+    version: data.npm_package_version,
+    port: data.APP_PORT,
   },
   openApi: {
-    title: process.env.OPEN_API_TITLE || 'Example API',
-    description: process.env.OPEN_API_DESCRIPTION || 'This is an example API',
-    path: process.env.OPEN_API_PATH || 'api',
+    title: data.OPEN_API_TITLE,
+    description: data.OPEN_API_DESCRIPTION,
+    path: data.OPEN_API_PATH,
   },
 };
