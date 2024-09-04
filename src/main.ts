@@ -1,11 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Logger } from 'nestjs-pino';
+import * as shortUUID from 'short-uuid';
 import { AppModule } from './app.module';
 import { env } from './env';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const adapter = new FastifyAdapter({
+    /** This is to provide a unique request ID on every request. */
+    genReqId: () => shortUUID.generate(),
+  });
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
+
+  const logger = app.get(Logger);
+  app.useLogger(logger);
 
   const apiPath = env.openApi.path;
   const apiConfig = new DocumentBuilder()
@@ -24,7 +33,7 @@ async function bootstrap() {
   });
 
   await app.listen(env.app.port);
-  console.log(`Application is running on: ${await app.getUrl()}`);
-  console.log(`Swagger is running on: ${await app.getUrl()}/${apiPath}`);
+  logger.log(`Application is running on: ${await app.getUrl()}`, 'Main');
+  logger.log(`Swagger is running on: ${await app.getUrl()}/${apiPath}`, 'Main');
 }
 bootstrap();

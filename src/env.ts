@@ -7,6 +7,8 @@ const envSchema = z.object({
   OPEN_API_TITLE: z.string().default('Example API'),
   OPEN_API_DESCRIPTION: z.string().default('This is an example API'),
   OPEN_API_PATH: z.string().default('api'),
+  LOG_LEVEL: z.union([z.literal('info'), z.literal('debug'), z.literal('error')]).default('info'),
+  LOG_PRETTY_PRINT: z.coerce.boolean().optional(),
 });
 
 const { success, data, error } = envSchema.safeParse(process.env);
@@ -24,5 +26,9 @@ export const env = {
     title: data.OPEN_API_TITLE,
     description: data.OPEN_API_DESCRIPTION,
     path: data.OPEN_API_PATH,
+  },
+  logger: {
+    level: data.LOG_LEVEL,
+    prettyPrint: data.LOG_PRETTY_PRINT,
   },
 };
