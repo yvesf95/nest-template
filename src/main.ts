@@ -5,6 +5,7 @@ import { Logger } from 'nestjs-pino';
 import * as shortUUID from 'short-uuid';
 import { AppModule } from './app.module';
 import { env } from './env';
+import metadata from './metadata';
 
 async function bootstrap() {
   const adapter = new FastifyAdapter({
@@ -23,9 +24,16 @@ async function bootstrap() {
     .setVersion(env.app.version)
     .addBearerAuth()
     .build();
+
+  /**
+   * When using SWC to build,
+   * we need to load the plugin metadata so that swagger cli plugin can read it.
+   * This metadata file is auto-generated upon start.
+   */
+  await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, apiConfig);
   SwaggerModule.setup(apiPath, app, document, {
-    // jsonDocumentUrl: `${apiPath}/json`,
+    jsonDocumentUrl: `${apiPath}/json`,
     swaggerOptions: {
       persistAuthorization: true,
     },
