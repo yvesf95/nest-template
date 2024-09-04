@@ -1,7 +1,9 @@
 import { Module, RequestMethod } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CustomErrorFilter } from './common/error/custom-error.filter';
 import { getPinoConfig } from './common/logger/pino.config';
 import { env } from './env';
 
@@ -16,6 +18,6 @@ import { env } from './env';
     ),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_FILTER, useClass: CustomErrorFilter }],
 })
 export class AppModule {}
