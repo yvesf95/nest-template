@@ -13,6 +13,8 @@ async function bootstrap() {
     genReqId: () => shortUUID.generate(),
   });
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
+  /** Uncomment this to set a global prefix. (e.g. 'api', 'v1', or 'api/v1') */
+  // app.setGlobalPrefix('v1');
 
   const logger = app.get(Logger);
   app.useLogger(logger);
@@ -38,10 +40,15 @@ async function bootstrap() {
       persistAuthorization: true,
     },
     customSiteTitle: env.openApi.title,
+    urls: [{ name: 'json', url: `${apiPath}/json` }],
+    swaggerUiEnabled: env.openApi.enabled,
   });
 
   await app.listen(env.app.port);
   logger.log(`Application is running on: ${await app.getUrl()}`, 'Main');
-  logger.log(`Swagger is running on: ${await app.getUrl()}/${apiPath}`, 'Main');
+
+  if (env.openApi.enabled) {
+    logger.log(`Swagger is running on: ${await app.getUrl()}/${apiPath}`, 'Main');
+  }
 }
 bootstrap();

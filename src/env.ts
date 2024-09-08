@@ -1,12 +1,13 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
+  /** App */
+  NODE_ENV: z.enum(['development', 'production']).default('development'),
+  APP_PORT: z.coerce.number().min(1000).default(3000),
   /** This comes from package.json */
-  npm_package_version: z.string().default('0.0.1'),
-  APP_PORT: z.coerce.number().min(1000),
-  OPEN_API_TITLE: z.string().default('Example API'),
-  OPEN_API_DESCRIPTION: z.string().default('This is an example API'),
-  OPEN_API_PATH: z.string().default('api'),
+  npm_package_version: z.string(),
+
+  /** Logger */
   LOG_LEVEL: z.union([z.literal('info'), z.literal('debug'), z.literal('error')]).default('info'),
   LOG_PRETTY_PRINT: z.coerce.boolean().optional(),
 });
@@ -21,11 +22,13 @@ export const env = {
   app: {
     version: data.npm_package_version,
     port: data.APP_PORT,
+    mode: data.NODE_ENV,
   },
   openApi: {
-    title: data.OPEN_API_TITLE,
-    description: data.OPEN_API_DESCRIPTION,
-    path: data.OPEN_API_PATH,
+    enabled: data.NODE_ENV === 'development',
+    title: 'Example API',
+    description: 'This is an example of a REST API',
+    path: 'api',
   },
   logger: {
     level: data.LOG_LEVEL,
