@@ -20,7 +20,7 @@ import { UsersModule } from './modules/users/users.module';
       }),
     ),
     UsersModule,
-    MikroOrmModule.forRoot({ ...mikroOrmConfig, autoLoadEntities: true }),
+    MikroOrmModule.forRoot(mikroOrmConfig),
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: CustomErrorFilter }],
