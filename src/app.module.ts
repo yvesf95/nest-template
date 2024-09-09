@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { CustomErrorFilter } from './common/error';
 import { getPinoConfig } from './common/logger';
 import { env } from './env';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { env } from './env';
         exclude: [{ method: RequestMethod.ALL, path: `${env.openApi.path}(.*)` }],
       }),
     ),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: CustomErrorFilter }],
