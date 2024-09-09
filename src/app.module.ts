@@ -1,3 +1,4 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module, RequestMethod } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
@@ -6,6 +7,7 @@ import { AppService } from './app.service';
 import { CustomErrorFilter } from './common/error';
 import { getPinoConfig } from './common/logger';
 import { config } from './config';
+import mikroOrmConfig from './mikro-orm.config';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -18,6 +20,7 @@ import { UsersModule } from './modules/users/users.module';
       }),
     ),
     UsersModule,
+    MikroOrmModule.forRoot({ ...mikroOrmConfig, autoLoadEntities: true }),
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: CustomErrorFilter }],

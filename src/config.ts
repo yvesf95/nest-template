@@ -10,6 +10,14 @@ const envSchema = z.object({
   /** Logger */
   LOG_LEVEL: z.union([z.literal('info'), z.literal('debug'), z.literal('error')]).default('info'),
   LOG_PRETTY_PRINT: z.coerce.boolean().optional(),
+
+  /** Database */
+  DB_HOST: z.string(),
+  DB_PORT: z.coerce.number().min(1000),
+  DB_USER: z.string(),
+  DB_PASSWORD: z.string(),
+  DB_NAME: z.string(),
+  DB_DEBUG: z.coerce.boolean().default(false),
 });
 
 const { success, data, error } = envSchema.safeParse(process.env);
@@ -33,5 +41,13 @@ export const config = {
   logger: {
     level: data.LOG_LEVEL,
     prettyPrint: data.LOG_PRETTY_PRINT,
+  },
+  db: {
+    host: data.DB_HOST,
+    port: data.DB_PORT,
+    user: data.DB_USER,
+    password: data.DB_PASSWORD,
+    name: data.DB_NAME,
+    debug: data.DB_DEBUG,
   },
 };
