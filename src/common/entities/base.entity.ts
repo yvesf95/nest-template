@@ -1,7 +1,17 @@
+import { BeforeUpdate, Entity, PrimaryKey, Property } from '@mikro-orm/core';
+
+@Entity({ abstract: true })
 export abstract class BaseEntity {
+  @PrimaryKey({ autoincrement: true })
   readonly id: string;
+
+  @Property({ onCreate: () => new Date() })
   createdDate = new Date();
+
+  @Property({ nullable: true, onUpdate: () => new Date() })
   lastUpdatedDate?: Date;
+
+  @Property({ concurrencyCheck: true, default: 1 })
   version = 1;
 
   /**
@@ -28,5 +38,11 @@ export abstract class BaseEntity {
 
     // Finally, compare the identifiers of the two entities. If they are equal, then the entities are equal.
     return this.id === obj.id;
+  }
+
+  /** Updates the version of the entity right before the entity is persisted in the database. */
+  @BeforeUpdate()
+  protected versionUp() {
+    this.version++;
   }
 }
