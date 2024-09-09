@@ -1,8 +1,10 @@
 import { defineConfig } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { BaseRepository } from './common/db';
 import { config } from './config';
 
 export default defineConfig({
+  entityRepository: BaseRepository,
   /** Set this to the database driver you want to use. */
   driver: PostgreSqlDriver,
 
