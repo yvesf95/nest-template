@@ -6,7 +6,7 @@ import { AppService } from './app.service';
 import { CustomErrorFilter } from './common/error';
 import { getPinoConfig } from './common/logger';
 import { config } from './config';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
