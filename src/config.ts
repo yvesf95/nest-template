@@ -7,6 +7,11 @@ const envSchema = z.object({
   /** This comes from package.json */
   npm_package_version: z.string(),
 
+  /** Firebase */
+  FIREBASE_PROJECT_ID: z.string(),
+  FIREBASE_PRIVATE_KEY: z.string(),
+  FIREBASE_CLIENT_EMAIL: z.string(),
+
   /** Logger */
   LOG_LEVEL: z.union([z.literal('info'), z.literal('debug'), z.literal('error')]).default('info'),
   LOG_PRETTY_PRINT: z.coerce.boolean().optional(),
@@ -33,5 +38,10 @@ export const config = {
   logger: {
     level: data.LOG_LEVEL,
     prettyPrint: data.LOG_PRETTY_PRINT,
+  },
+  firebase: {
+    projectId: data.FIREBASE_PROJECT_ID,
+    privateKey: data.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    clientEmail: data.FIREBASE_CLIENT_EMAIL,
   },
 };

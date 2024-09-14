@@ -6,6 +6,9 @@ import { AppService } from './app.service';
 import { CustomErrorFilter } from './common/error';
 import { getPinoConfig } from './common/logger';
 import { config } from './config';
+import { FirebaseAuthService } from './lib/firebase/firebase-auth.service';
+import { FirebaseModule } from './lib/firebase/firebase.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -17,6 +20,10 @@ import { UsersModule } from './modules/users/users.module';
         exclude: [{ method: RequestMethod.ALL, path: `${config.openApi.path}(.*)` }],
       }),
     ),
+    AuthModule.forRoot({
+      authModule: [FirebaseModule.forRoot({ serviceAccount: config.firebase })],
+      jwt: { authService: FirebaseAuthService },
+    }),
     UsersModule,
   ],
   controllers: [AppController],
