@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import * as shortUUID from 'short-uuid';
 import { AppModule } from './app.module';
-import { env } from './env';
+import { config } from './config';
 import metadata from './metadata';
 
 async function bootstrap() {
@@ -19,11 +19,11 @@ async function bootstrap() {
   const logger = app.get(Logger);
   app.useLogger(logger);
 
-  const apiPath = env.openApi.path;
+  const apiPath = config.openApi.path;
   const apiConfig = new DocumentBuilder()
-    .setTitle(env.openApi.title)
-    .setDescription(env.openApi.description)
-    .setVersion(env.app.version)
+    .setTitle(config.openApi.title)
+    .setDescription(config.openApi.description)
+    .setVersion(config.app.version)
     .addBearerAuth()
     .build();
 
@@ -39,15 +39,15 @@ async function bootstrap() {
     swaggerOptions: {
       persistAuthorization: true,
     },
-    customSiteTitle: env.openApi.title,
+    customSiteTitle: config.openApi.title,
     urls: [{ name: 'json', url: `${apiPath}/json` }],
-    swaggerUiEnabled: env.openApi.enabled,
+    swaggerUiEnabled: config.openApi.enabled,
   });
 
-  await app.listen(env.app.port);
+  await app.listen(config.app.port);
   logger.log(`Application is running on: ${await app.getUrl()}`, 'Main');
 
-  if (env.openApi.enabled) {
+  if (config.openApi.enabled) {
     logger.log(`Swagger is running on: ${await app.getUrl()}/${apiPath}`, 'Main');
   }
 }

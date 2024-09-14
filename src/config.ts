@@ -18,7 +18,7 @@ if (!success) {
   process.exit(1);
 }
 
-export const env = {
+export const config = {
   app: {
     version: data.npm_package_version,
     port: data.APP_PORT,

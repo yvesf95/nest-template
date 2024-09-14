@@ -5,16 +5,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CustomErrorFilter } from './common/error';
 import { getPinoConfig } from './common/logger';
-import { env } from './env';
+import { config } from './config';
 import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     LoggerModule.forRoot(
       getPinoConfig({
-        level: env.logger.level,
-        pretty: env.logger.prettyPrint,
-        exclude: [{ method: RequestMethod.ALL, path: `${env.openApi.path}(.*)` }],
+        level: config.logger.level,
+        pretty: config.logger.prettyPrint,
+        exclude: [{ method: RequestMethod.ALL, path: `${config.openApi.path}(.*)` }],
       }),
     ),
     UsersModule,
