@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
+import { CustomError } from '../common/error';
 import { AppService } from './app.service';
-import { CustomError } from './common/error';
 
 @Controller()
 export class AppController {

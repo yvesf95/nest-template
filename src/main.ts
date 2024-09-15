@@ -3,9 +3,9 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import * as shortUUID from 'short-uuid';
-import { AppModule } from './app.module';
 import { config } from './config';
 import metadata from './metadata';
+import { AppModule } from './modules/app.module';
 
 async function bootstrap() {
   const adapter = new FastifyAdapter({
