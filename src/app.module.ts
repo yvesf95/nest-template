@@ -4,8 +4,8 @@ import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CustomErrorFilter } from './common/error';
-import { getPinoConfig } from './common/logger';
 import { config } from './config';
+import { getPinoConfig } from './lib/pino';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
