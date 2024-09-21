@@ -1,7 +1,7 @@
 import { CustomErrorFilter } from '@/common/error';
 import { config } from '@/config';
 import { getPinoConfig } from '@/lib/pino';
-import { Module, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
@@ -14,7 +14,7 @@ import { UsersModule } from './users/users.module';
       getPinoConfig({
         level: config.logger.level,
         pretty: config.logger.prettyPrint,
-        exclude: [{ method: RequestMethod.ALL, path: `${config.openApi.path}(.*)` }],
+        exclude: [`${config.openApi.path}(.*)`],
       }),
     ),
     UsersModule,
