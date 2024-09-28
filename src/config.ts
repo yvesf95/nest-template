@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { BooleanUtil } from './common/utils';
 
 const envSchema = z.object({
   /** App */
@@ -9,7 +10,7 @@ const envSchema = z.object({
 
   /** Logger */
   LOG_LEVEL: z.union([z.literal('info'), z.literal('debug'), z.literal('error')]).default('info'),
-  LOG_PRETTY_PRINT: z.coerce.boolean().optional(),
+  LOG_PRETTY_PRINT: z.union([z.literal('true'), z.literal('false')]).optional(),
 });
 
 const { success, data, error } = envSchema.safeParse(process.env);
@@ -32,6 +33,6 @@ export const config = {
   },
   logger: {
     level: data.LOG_LEVEL,
-    prettyPrint: data.LOG_PRETTY_PRINT,
+    prettyPrint: BooleanUtil.toBoolean(data.LOG_PRETTY_PRINT as string),
   },
 };
