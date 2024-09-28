@@ -7,18 +7,16 @@ import pinoPretty, { PrettyOptions } from 'pino-pretty';
  *
  * @see {@link https://github.com/pinojs/pino-pretty?tab=readme-ov-file#handling-non-serializable-options pino-pretty docs}
  */
-// module.exports = function pinoPrettyTransport(opts: PrettyOptions | undefined) {
 export default function pinoPrettyTransport(opts?: PrettyOptions) {
   return pinoPretty({
     ...opts,
     singleLine: true,
-    // messageFormat(log: any) {
-    //   // if (log.req) return `${log.req.method} ${log.req.url} - ${log.responseTime}ms`;
-    //   // return `${log.msg}`;
-    //   return log.context ? `[${log.context}] ${log.msg}` : `${log.msg}`;
-    // },
     messageFormat: (log, messageKey, levelLabel, { colors }) => {
       const context = log.context || '-';
+      /**
+       * Remove `context` property from the log object since we are already adding it to the `message`.
+       */
+      delete log.context;
       // `colors` is a Colorette object with colors enabled based on `colorize` option
       return `${colors.yellow(`[${context}]`)} ${log[messageKey]}`;
     },

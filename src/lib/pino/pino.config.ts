@@ -1,5 +1,6 @@
 import { RouteInfo } from '@nestjs/common/interfaces';
 import { Params } from 'nestjs-pino';
+import PinoPretty from 'pino-pretty';
 
 export type LogLevel = 'debug' | 'info' | 'error';
 
@@ -18,7 +19,7 @@ export type GetPinoConfigParam = {
 };
 
 /** Factory function to create pino logger params. */
-export const getPinoConfig = (params: GetPinoConfigParam) => {
+export const buildPinoParams = (params: GetPinoConfigParam) => {
   const pinoHttpConfig: Params['pinoHttp'] = {
     timestamp: true,
     level: params.level || 'info',
@@ -27,9 +28,7 @@ export const getPinoConfig = (params: GetPinoConfigParam) => {
     hooks: { logMethod },
     customReceivedMessage: (req: any) => `${req.method} '${req.url}' received`,
     customSuccessMessage: (req, res, responseTime) =>
-      `${req.method} '${req.url}' completed - ${res.statusCode} ${res.statusMessage} - ${responseTime}ms`,
-    customErrorMessage: (req, res) =>
-      `${req.method} '${req.url}' failed with status code ${res.statusCode} ${res.statusMessage}`,
+      `${req.method} '${req.url}' - ${res.statusCode} (${responseTime}ms)`,
     quietReqLogger: true,
     quietResLogger: true,
   };
@@ -46,6 +45,9 @@ export const getPinoConfig = (params: GetPinoConfigParam) => {
        * Then we need to resolve the module path to require the module and pass it to the `transport` option.
        */
       target: require.resolve('./pino-pretty-transport'),
+      options: {
+        singleLine: true,
+      } as PinoPretty.PrettyOptions,
     };
   }
 
@@ -73,10 +75,6 @@ export const getPinoConfig = (params: GetPinoConfigParam) => {
  *
  * To modify this behavior, we can handle the `interpolationValues` array in the `logMethod` function.
  * This way we can use the logger methods just like the regular `console.log` method.
- *
- * Note: Nestjs 8.0.0 and above also treats `interpolationValues` the same way as Pino,
- * where there should be printf-style placeholder for it in message argument or else it will not be logged.
- * See {@link https://github.com/iamolegga/nestjs-pino?tab=readme-ov-file#nestjs-loggerservice-interface-breaking-change}
  */
 function logMethod(args: any[], method: (...args: any[]) => void) {
   /**

@@ -1,6 +1,6 @@
 import { CustomErrorFilter } from '@/common/error';
 import { config } from '@/config';
-import { getPinoConfig } from '@/lib/pino';
+import { buildPinoParams } from '@/lib/pino';
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
@@ -11,7 +11,7 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     LoggerModule.forRoot(
-      getPinoConfig({
+      buildPinoParams({
         level: config.logger.level,
         pretty: config.logger.prettyPrint,
         exclude: [`${config.openApi.path}(.*)`],
