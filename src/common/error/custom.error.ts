@@ -1,11 +1,11 @@
 import { HttpStatus } from '@nestjs/common';
 
 export type CustomErrorParams<TErrorCode = string> = {
-  /** Code for identifying the error. */
-  code: TErrorCode;
-
   /** Message to display to the logs and to the user. */
   message: string;
+
+  /** Code for identifying the error. */
+  code?: TErrorCode;
 
   /** Custom name for the error. Default: `<class name>`. */
   name?: string;
@@ -14,7 +14,7 @@ export type CustomErrorParams<TErrorCode = string> = {
   description?: string;
 
   /** Corresponding HTTP status code. Default: `500`. */
-  httpStatus?: HttpStatus;
+  status?: HttpStatus;
 
   /** Additional parameters. */
   extra?: Record<string, unknown>;
@@ -22,13 +22,13 @@ export type CustomErrorParams<TErrorCode = string> = {
 
 export class CustomError<TErrorCode = string> extends Error {
   /** Code to identify the error. */
-  code: TErrorCode;
+  code?: TErrorCode;
 
   /** Description on what the error is about. */
   description?: string;
 
   /** Corresponding HTTP status code. Default: `500`. */
-  httpStatus: HttpStatus;
+  status: HttpStatus;
 
   /** Additional parameters. */
   params?: Record<string, unknown>;
@@ -38,7 +38,7 @@ export class CustomError<TErrorCode = string> extends Error {
     this.name = error.name || this.constructor.name;
     this.code = error.code;
     this.description = error.description;
-    this.httpStatus = error.httpStatus || HttpStatus.INTERNAL_SERVER_ERROR;
+    this.status = error.status || HttpStatus.INTERNAL_SERVER_ERROR;
     this.params = error.extra;
   }
 }

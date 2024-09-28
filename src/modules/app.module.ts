@@ -1,4 +1,4 @@
-import { CustomErrorFilter } from '@/common/error';
+import { AllExceptionFilter } from '@/common/error';
 import { config } from '@/config';
 import { buildPinoParams } from '@/lib/pino';
 import { Module } from '@nestjs/common';
@@ -20,6 +20,6 @@ import { UsersModule } from './users/users.module';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_FILTER, useClass: CustomErrorFilter }],
+  providers: [AppService, { provide: APP_FILTER, useClass: AllExceptionFilter }],
 })
 export class AppModule {}
